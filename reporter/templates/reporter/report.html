@@ -1,0 +1,30 @@
+<div class="panel panel-primary">
+    <div class="panel-heading header-text">I. Report description</div>
+    {% for field in report_form %}
+        <div class="panel-body">
+            <div class="form-group">
+                {% if field.name == "create_date" %}
+                    <label for="{{ field.name }}">{{ field.label }}</label>
+                    <input name="{{ field.name }}" type="date" class="form-control" id="{{ field.name }}">
+                {% elif field.name == "report_name" %}
+                    <label for="{{ field.name }}">{{ field.label }}</label>
+                    <input name="{{ field.name }}" type="text" class="form-control" id="{{ field.name }}"
+                           required="true">
+                {% elif field.name == "report_type" %}
+                    <div class="form-group">
+                        <label for="{{ field.name }}">{{ field.label }}</label>
+                        <select name="{{ field.name }}" class="form-control" id="{{ field.name }}" required="true">
+                            {% for value, text in report_form.report_type.field.choices %}
+                                <option name="{{ value }}" value="{{ value }}">{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% else %}
+                    <label for="{{ field.name }}">{{ field.label }}</label>
+                    <textarea name="{{ field.name }}" class="form-control" rows="5"
+                              id="{{ field.name }}"></textarea>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

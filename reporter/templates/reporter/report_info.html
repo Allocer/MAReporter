@@ -1,0 +1,27 @@
+{% load static %}
+<head>
+    <title>Reporter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/style.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>Malware Analysis Reporter</h2>
+    <form action="{% url 'reporter:new_report' %}" method="post">{% csrf_token %}
+        {% if form.errors %}
+            errors: {{ form.errors }}
+        {% endif %}
+        {% include "reporter/report.html" %}
+        {% include "reporter/malware_info.html" %}
+        {% include "reporter/malware_dep.html" %}
+        {% include "reporter/malware_characteristic.html" %}
+        {% include "reporter/analysis_findings.html" %}
+        {% include "reporter/supporting_figures.html" %}
+        <button type="submit" value="submit" class="btn btn-primary">Generuj raport</button>
+    </form>
+</div>
+</body>
