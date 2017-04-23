@@ -90,7 +90,7 @@ class MalwareFile(models.Model):
 
 
 class Report(models.Model):
-    report_name = models.CharField(max_length=100)
+    report_name = models.CharField(max_length=100, unique=True)
     create_date = models.DateField('date of creation', default='2016-05-09', blank=True)
     malware_file_info = models.ForeignKey(MalwareFile)
     additional_findings = models.TextField(max_length=10000, blank=True)

@@ -1,10 +1,39 @@
+from io import BytesIO
+
 from django.shortcuts import render, redirect
+
+from reporter.PdfPrinter import PdfPrinter
+from reporter.Common import Common
 
 from reporter.forms import MalwareFileForm, MalwareDependenciesForm, MalwareCharacteristicForm, AnalysisFindingsForm, \
     SupportingFiguresForm, ReportForm
+from reporter.models import Report
 
 
-def get_empty_form(request, template_name='reporter/report_info.html'):
+def index_view(request, template_name='reporter/index.html'):
+    return render(request, template_name)
+
+
+def list_view(request, template_name='reporter/list.html'):
+    all_reports = Report.objects.all()
+    return render(request, template_name, {'reports': all_reports})
+
+
+def delete_view(request):
+    report_name = request.POST.get("report_name", "")
+    report = Report.objects.get(report_name=report_name)
+
+    if request.method == 'POST':
+        report.delete()
+
+    return redirect('reporter:list')
+
+
+def help_view(request, template_name='reporter/help.html'):
+    return render(request, template_name)
+
+
+def new_report_view(request, template_name='reporter/report_info.html'):
     report_form = ReportForm()
     malware_info_form = MalwareFileForm()
     malware_dependencies_form = MalwareDependenciesForm()
@@ -20,9 +49,9 @@ def get_empty_form(request, template_name='reporter/report_info.html'):
                                            'supporting_figures_form': supporting_figures_form})
 
 
-def report_create(request, template_name='reporter/created.html'):
+def list_of_all_reports_view(request, template_name='reporter/list.html'):
     if request.POST:
-        analysis_findings_form, malware_characteristic_form, malware_dependencies_form, malware_info_form, report_form, supporting_figures_form = get_data_from_request(
+        analysis_findings_form, malware_characteristic_form, malware_dependencies_form, malware_info_form, report_form, supporting_figures_form = Common.get_data_from_request(
             request)
 
         if report_form.is_valid() and malware_info_form.is_valid():
@@ -33,43 +62,28 @@ def report_create(request, template_name='reporter/created.html'):
             analysis_findings = analysis_findings_form.save(commit=False)
             supporting_figures = supporting_figures_form.save(commit=False)
 
-            save_malware_info_segments(analysis_findings, malware_characteristic, malware_dependencies,
-                                       supporting_figures)
-            save_malware_file_info(analysis_findings, malware_characteristic, malware_dependencies, malware_file,
-                                   supporting_figures)
-            save_report(malware_file, report)
+            Common.save_malware_info_segments(analysis_findings, malware_characteristic, malware_dependencies,
+                                              supporting_figures)
+            Common.save_malware_file_info(analysis_findings, malware_characteristic, malware_dependencies, malware_file,
+                                          supporting_figures)
+            Common.save_report(malware_file, report)
 
-            return render(request, template_name, {})
+            all_reports = Report.objects.all()
+            return render(request, template_name, {'reports': all_reports})
 
     return redirect('reporter:empty_form')
 
 
-def get_data_from_request(request):
-    report_form = ReportForm(request.POST)
-    malware_info_form = MalwareFileForm(request.POST)
-    malware_dependencies_form = MalwareDependenciesForm(request.POST)
-    malware_characteristic_form = MalwareCharacteristicForm(request.POST)
-    analysis_findings_form = AnalysisFindingsForm(request.POST)
-    supporting_figures_form = SupportingFiguresForm(request.POST)
-    return analysis_findings_form, malware_characteristic_form, malware_dependencies_form, malware_info_form, report_form, supporting_figures_form
+def generate_pdf(request):
+    if 'pdf' in request.POST:
+        report_name = request.POST.get("report_name", "")
 
+        response = Common.create_file_attachment_response()
+        buffer = BytesIO()
 
-def save_report(malware_file, report):
-    report.malware_file_info = malware_file
-    report.save()
+        report_pdf = PdfPrinter(buffer, 'A4')
+        pdf = report_pdf.report('Malware Analysis Report', report_name)
 
+        response.write(pdf)
 
-def save_malware_file_info(analysis_findings, malware_characteristic, malware_dependencies, malware_file,
-                           supporting_figures):
-    malware_file.malware_dependencies = malware_dependencies
-    malware_file.malware_characteristic = malware_characteristic
-    malware_file.analysis_findings = analysis_findings
-    malware_file.supporting_figures = supporting_figures
-    malware_file.save()
-
-
-def save_malware_info_segments(analysis_findings, malware_characteristic, malware_dependencies, supporting_figures):
-    malware_dependencies.save()
-    malware_characteristic.save()
-    analysis_findings.save()
-    supporting_figures.save()
+        return response

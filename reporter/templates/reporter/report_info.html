@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    <h2>Malware Analysis Reporter</h2>
+    <h2 class="title">Malware Analysis Reporter</h2>
     <form action="{% url 'reporter:new_report' %}" method="post">{% csrf_token %}
         {% if form.errors %}
             errors: {{ form.errors }}
@@ -21,7 +21,7 @@
         {% include "reporter/malware_characteristic.html" %}
         {% include "reporter/analysis_findings.html" %}
         {% include "reporter/supporting_figures.html" %}
-        <button type="submit" value="submit" class="btn btn-primary">Generuj raport</button>
+        <button type="submit" value="submit" class="btn btn-primary">Create report</button>
     </form>
 </div>
 </body>

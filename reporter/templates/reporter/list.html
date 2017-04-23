@@ -1,0 +1,48 @@
+{% load static %}
+<head>
+    <title>Reporter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/style.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2 class="title">List of all reports</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Report name</th>
+            <th>Date of creation</th>
+            <th>Malware type</th>
+            <th>Generate PDF</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <form action="{% url 'reporter:generate_pdf' %}" method="post">{% csrf_token %}
+                    <td>{{ report.report_name }}</td>
+                    <td>{{ report.create_date }}</td>
+                    <td>{{ report.malware_file_info.malware_type }}</td>
+                    <td>
+                        <input type="hidden" id="report_name" name="report_name" value="{{ report.report_name }}"/>
+                        <button type="submit" value="submit" name="pdf" class="btn btn-primary">PDF</button>
+                    </td>
+                </form>
+                <form action="{% url 'reporter:delete_report' %}" method="post">{% csrf_token %}
+                    <td>
+                        <input type="hidden" id="report_name" name="report_name" value="{{ report.report_name }}"/>
+                        <button type="submit" value="submit" class="btn btn-danger">Delete</button>
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</body>

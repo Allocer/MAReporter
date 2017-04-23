@@ -1,0 +1,19 @@
+{% load static %}
+<head>
+    <title>Reporter - help</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/style.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <b>Pomoc:</b><br />
+    1. Nalezy zainstalowac baze PostgreSQL, aby moc korzystac z aplikacji.<br />
+    2. Po przejsciu do folderu MalwareAnalystReporter, aplikacje mozna uruchomic poleceniem: python manage.py runserver [port] (UWAGA: domyslny port to 8000) lub shift+F10 w PyCharm<br />
+    3. Aplikacja znajduje sie pod adresem: "localhost:[port]/reporter<br />
+    4. Po stworzeniu formularza, ktorego niektore pola sa wymagane, zostanie zapisany on w bazie danych. Nastepnie mozna taki formularz wygenerowac jako plik PDF.<br />
+    5. Aby uzyskac pomoc nalezy uzyc komendy: python manage.py reporter_info<br />
+</div>

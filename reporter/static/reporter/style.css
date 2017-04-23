@@ -3,3 +3,50 @@
     font-weight: bold;
     color: green;
 }
+
+.body{
+    font: "Arial Black";
+}
+
+.back {
+    background-image: url("/static/images/back.jpg");
+}
+
+.welcome {
+    font-weight: bold;
+    font-size: 35px;
+    font: "Arial Black";
+    color: white;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 35px;
+    font: "Arial Black";
+    color: black;
+}
+
+.report {
+    font-weight: bold;
+    font-size: 25px;
+    font: "Arial Black";
+    color: white;
+}
+
+.btn-size {
+    width: 300px;
+    font-size: 40px;
+    font: "Arial Black";
+}
+
+.btn-size2 {
+    width: 300px;
+    font-size: 40px;
+    font: "Arial Black";
+    margin-left: 40px;
+}
+
+.margin-top {
+    margin-top: 350px;
+    margin-left: -20px;
+}
